@@ -33,14 +33,18 @@ def send_to_google_sheets(response):
     body = {
         "sheet1": {
             # "date": "20210120"
-            "date": str(dt.datetime.today()),
-            "time": str(dt.datetime.now()),
+            "date": str(dt.datetime.today().strftime('%d/%m/%Y')),
+            "time": str(dt.datetime.now().strftime("%H:%M")),
             "exercise": response["exercises"][0]["user_input"],
             "duration": response["exercises"][0]["duration_min"],
             "calories": response["exercises"][0]["nf_calories"],
         }
     }
-    response = requests.post(url=google_sheet_endpoint, json=body)
+    headers = {
+        "Authorization": credentials.sheety_auth_token
+    }
+    response = requests.post(url=google_sheet_endpoint,
+                             json=body, headers=headers)
 
 
 def main():
